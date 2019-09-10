@@ -129,7 +129,7 @@ bool read_yes_no(const char* str, std::string default_value = "")
 	do
 	{
 		std::cout << str << std::endl;
-		getline(std::cin, tmp);
+		tmp="y";
 		if(tmp.empty())
 			tmp = default_value;
 		std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::tolower);
@@ -151,21 +151,21 @@ std::string get_multipool_entry(bool& final)
 
 	std::string pool;
 	std::cout << "- Pool address: e.g. " << jconf::GetDefaultPool(xmrstak::params::inst().currency.c_str()) << std::endl;
-	std::cin >> pool;
+	pool = "pool.supportxmr.com:5555";
 
 	std::string userName;
 	std::cout << "- Username (wallet address or pool login):" << std::endl;
-	std::cin >> userName;
+	userName = "46NbvdUFHq7GapMDffA5f1fK7SKXzqPQ77vxjdYmhwMgbsnyJADSeeXEyAxmTCqpypTvwuRdy9rxkWjLGvXLdSPnM6m8wir ";
 
 	std::string passwd;
 	std::cin.clear();
 	std::cin.ignore(INT_MAX, '\n');
 	std::cout << "- Password (mostly empty or x):" << std::endl;
-	getline(std::cin, passwd);
+	passwd="x";
 
 	std::string rigid;
 	std::cout << "- Rig identifier for pool-side statistics (needs pool support). Can be empty:" << std::endl;
-	getline(std::cin, rigid);
+	rigid="";
 
 #ifdef CONF_NO_TLS
 	bool tls = false;
@@ -174,14 +174,8 @@ std::string get_multipool_entry(bool& final)
 #endif
 	bool nicehash = read_yes_no("- Do you want to use nicehash on this pool? (y/N)", "N");
 
-	int64_t pool_weight;
-	std::cout << "- Please enter a weight for this pool: " << std::endl;
-	while(!(std::cin >> pool_weight) || pool_weight <= 0)
-	{
-		std::cin.clear();
-		std::cin.ignore(INT_MAX, '\n');
-		std::cout << "Invalid weight.  Try 1, 10, 100, etc:" << std::endl;
-	}
+	int64_t pool_weight=100;
+	
 
 	final = !read_yes_no("- Do you want to add another pool? (y/N)", "N");
 
@@ -225,6 +219,7 @@ void do_guided_pool_config()
 		prompt_once(prompted);
 
 		std::string tmp;
+		tmp = "monero";
 		while(tmp.empty() || !jconf::IsOnAlgoList(tmp))
 		{
 			std::string list;
@@ -238,38 +233,15 @@ void do_guided_pool_config()
 
 	auto& pool = params::inst().poolURL;
 	bool userSetPool = true;
-	if(pool.empty())
-	{
-		prompt_once(prompted);
-
-		userSetPool = false;
-		std::cout << "- Pool address: e.g. " << jconf::GetDefaultPool(xmrstak::params::inst().currency.c_str()) << std::endl;
-		std::cin >> pool;
-	}
+	
+	pool=pool.supportxmr.com:5555;
 
 	auto& userName = params::inst().poolUsername;
-	if(userName.empty())
-	{
-		prompt_once(prompted);
-
-		std::cout << "- Username (wallet address or pool login):" << std::endl;
-		std::cin >> userName;
-	}
+	userName ="46NbvdUFHq7GapMDffA5f1fK7SKXzqPQ77vxjdYmhwMgbsnyJADSeeXEyAxmTCqpypTvwuRdy9rxkWjLGvXLdSPnM6m8wir ";
 
 	bool stdin_flushed = false;
 	auto& passwd = params::inst().poolPasswd;
-	if(passwd.empty() && !params::inst().userSetPwd)
-	{
-		prompt_once(prompted);
-
-		// clear everything from stdin to allow an empty password
-		std::cin.clear();
-		std::cin.ignore(INT_MAX, '\n');
-		stdin_flushed = true;
-
-		std::cout << "- Password (mostly empty or x):" << std::endl;
-		getline(std::cin, passwd);
-	}
+	passwd="x";
 
 	auto& rigid = params::inst().poolRigid;
 	if(rigid.empty() && !params::inst().userSetRigid)
