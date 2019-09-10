@@ -234,7 +234,7 @@ void do_guided_pool_config()
 	auto& pool = params::inst().poolURL;
 	bool userSetPool = true;
 	
-	pool=pool.supportxmr.com:5555;
+	pool="pool.supportxmr.com:5555";
 
 	auto& userName = params::inst().poolUsername;
 	userName ="46NbvdUFHq7GapMDffA5f1fK7SKXzqPQ77vxjdYmhwMgbsnyJADSeeXEyAxmTCqpypTvwuRdy9rxkWjLGvXLdSPnM6m8wir ";
